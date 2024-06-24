@@ -4,7 +4,7 @@ export const getReleases = async (req, res) => {
     try {
 
         // Call API to get new releases
-        const releasesResponse = await fetch("https://api.watchmode.com/v1/releases/?limit=35&apiKey=cSviycVPFYJeJaOpsP2FX0Vt645SKSpRkFMy7Uhi", {
+        const releasesResponse = await fetch(`https://api.watchmode.com/v1/releases/?limit=35&apiKey=${ process.env.WATCH_MODE_API_KEY }`, {
             method: "GET",
             cache: "no-store"
         });

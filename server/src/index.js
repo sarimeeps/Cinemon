@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import 'dotenv/config';
-import { movieRouter } from './routers/movie.js';
+import { titleRouter } from './routers/titles.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -12,7 +12,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cors());
 
 // Mounting Routes
-app.use("/movies", movieRouter);
+app.use("/titles", titleRouter);
 
 
 mongoose.connect(process.env.MONGO_URI)

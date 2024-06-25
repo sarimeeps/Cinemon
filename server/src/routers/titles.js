@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { getReleases } from "../controllers/titles.js";
+import { getHomePageTitles } from "../controllers/index.js";
 
 
 const router = Router();
 
-router.get("/releases", getReleases);
+router.get("/releases", getHomePageTitles);
 
 export { router as titleRouter };
 

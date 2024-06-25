@@ -84,3 +84,99 @@ export const getHomePageTitles = async (req, res) => {
     }
 
 }
+
+// POST: Search for a title
+export const searchTitle = async (req, res) => {
+
+    const { searchQuery } = req.body;
+
+    try {
+
+        const resultsRes = await fetch(`https://api.watchmode.com/v1/autocomplete-search/?apiKey=${ process.env.WATCH_MODE_API_KEY }&search_value=${ searchQuery }&search_type=2`, {
+            method: "GET",
+            cache: "no-store"
+        });
+
+        if (resultsRes.ok) {
+
+            const { results } = await resultsRes.json();
+
+            return res.json({ results });
+
+        }
+        
+    } catch (err) {
+        res.status(500);
+        return res.json({ err: "There was a problem fetching the results "});
+    }
+
+}
+
+// GET: Get a single title
+export const getTitle = (req, res) => {
+
+    const { titleId } = req.params;
+
+    fetch(`https://api.watchmode.com/v1/title/${ titleId }/details/?apiKey=${ process.env.WATCH_MODE_API_KEY }`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    .then(res => res.json())
+    .then(result => {
+        return res.json({ title: result });
+    })
+    .catch(err => {
+        res.status(500);
+        return res.json({ err: "There was an error fetching this title"})
+    });
+
+}
+
+// GET: Get titles by genre according to WatchMode genre ids
+export const getTitlesByGenre = async (req, res) => {
+
+    const { genreId } = req.params;
+
+    try {
+
+        const titlesRes = await fetch(`https://api.watchmode.com/v1/list-titles/?apiKey=${ process.env.WATCH_MODE_API_KEY }&genres=${ genreId }&limit=30`, {
+            method: "GET",
+            cache: "no-store"
+        });
+
+        if (titlesRes.ok) {
+
+            const { titles } = await titlesRes.json();
+
+            // Get the poster image for each title
+            for (const elem of titles) {
+
+                let postersRes = await fetch(`https://api.themoviedb.org/3/${ elem.tmdb_type }/${ elem.tmdb_id }/images`, {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Accept": "application/json",
+                        "Authorization": process.env.TMDB_AUTH_KEY
+                    }
+                });
+
+                if (postersRes.ok) {
+                    const { posters } = await postersRes.json();
+                    elem.poster = posters[0];
+                }
+            }
+
+            return res.json({ titles });
+
+        } else {
+            res.status(404);
+            return res.json({ err: "Error fetching results" });
+        }
+        
+    } catch (err) {
+        console.log(err.message);
+        res.status(500);
+        return res.json({ err: "There was a problem fetching the titles "});
+    }
+
+}

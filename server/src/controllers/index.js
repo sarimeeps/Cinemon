@@ -80,55 +80,66 @@ export const getHomePageTitles = async (req, res) => {
         }
         
     } catch (err) {
+        res.status(500);
         return res.json({ err: err.message });
     }
 
 }
 
 // POST: Search for a title
-export const searchTitle = async (req, res) => {
+export const searchTitle = (req, res) => {
 
     const { searchQuery } = req.body;
 
+    // Handle API call using promise chaining
+    fetch(`https://api.watchmode.com/v1/autocomplete-search/?apiKey=${ process.env.WATCH_MODE_API_KEY }&search_value=${ searchQuery }&search_type=2`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    .then(searchRes => searchRes.json())
+    .then(results => {
+        return res.json({ results });
+    })
+    .catch(err => {
+        res.status(500);
+        return res.json({ err: "There was a problem fetching the results" });
+    });
+    
+}
+
+// GET: Get a single title
+export const getTitle = async (req, res) => {
+
+    const { titleId } = req.params;
+
     try {
 
-        const resultsRes = await fetch(`https://api.watchmode.com/v1/autocomplete-search/?apiKey=${ process.env.WATCH_MODE_API_KEY }&search_value=${ searchQuery }&search_type=2`, {
+        const titleRes = await fetch(`https://api.watchmode.com/v1/title/${ titleId }/details/?apiKey=${ process.env.WATCH_MODE_API_KEY }`, {
             method: "GET",
             cache: "no-store"
         });
 
-        if (resultsRes.ok) {
+        const crewRes = await fetch(`https://api.watchmode.com/v1/title/${ titleId }/cast-crew/?apiKey=${ process.env.WATCH_MODE_API_KEY }`, {
+            method: "GET",
+            cache: "no-store"
+        });
 
-            const { results } = await resultsRes.json();
+        if (titleRes.ok && crewRes.ok) {
 
-            return res.json({ results });
+            const title = await titleRes.json();
+            const crew = await crewRes.json();
 
+            return res.json({ title, crew });
+
+        } else {
+            res.status(titleRes.status);
+            return res.json({ err: "There was a problem fetching this title "});
         }
         
     } catch (err) {
         res.status(500);
-        return res.json({ err: "There was a problem fetching the results "});
+        return res.json({ err: "There was a problem fetching this title" });
     }
-
-}
-
-// GET: Get a single title
-export const getTitle = (req, res) => {
-
-    const { titleId } = req.params;
-
-    fetch(`https://api.watchmode.com/v1/title/${ titleId }/details/?apiKey=${ process.env.WATCH_MODE_API_KEY }`, {
-        method: "GET",
-        cache: "no-store"
-    })
-    .then(res => res.json())
-    .then(result => {
-        return res.json({ title: result });
-    })
-    .catch(err => {
-        res.status(500);
-        return res.json({ err: "There was an error fetching this title"})
-    });
 
 }
 
@@ -174,7 +185,6 @@ export const getTitlesByGenre = async (req, res) => {
         }
         
     } catch (err) {
-        console.log(err.message);
         res.status(500);
         return res.json({ err: "There was a problem fetching the titles "});
     }

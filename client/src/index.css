@@ -19,3 +19,9 @@ button {
     cursor: pointer;
     border: none;
 }
+
+.page {
+    max-width: 850px;
+    margin: 10px auto;
+    min-width: 850px;
+}

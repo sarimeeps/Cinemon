@@ -58,9 +58,21 @@ export const getHomePageTitles = async (req, res) => {
                     }
                 });
 
-                if (backdropsRes.ok) {
+                let titleRes = await fetch(`https://api.watchmode.com/v1/title/${ elem.id }/details/?apiKey=${ process.env.WATCH_MODE_API_KEY }`, {
+                    method: "GET",
+                    cache: "no-store"
+                });
+
+                if (backdropsRes.ok && titleRes.ok) {
                     const { backdrops } = await backdropsRes.json();
+                    const title = await titleRes.json();
+
                     elem.backdrop = backdrops[0];
+                    elem.year = title.year;
+                    elem.runtime = title.runtime_minutes;
+                    elem.genre = title.genre_names[0];
+                    elem.runtime = title.runtime_minutes;
+
                 }
             }
 

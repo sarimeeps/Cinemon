@@ -1,13 +1,11 @@
-import "./titleSlider.css";
-import { useState } from "react";
+import "./featuredSlider.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 
-export default function TitleSlider({ title, list }) {
+export default function FeaturedSlider({ titles }) {
 
-    const [titles, setTitles] = useState(list);
 
     // Slider settings
     var settings = {
@@ -20,16 +18,13 @@ export default function TitleSlider({ title, list }) {
     };
 
     return <>
-        <div className="slider">
-            <p className="title">{ title }</p>
+        <div className="featured-slider">
             <Slider {...settings} >
 
                 {titles.map((elem, index) => (
-
                     <Link to={`/${ elem.id }`}>
                         <TitleCard key={index} title={elem} />
                     </Link>
-
                 ))}
 
             </Slider>
@@ -41,15 +36,8 @@ export default function TitleSlider({ title, list }) {
 function TitleCard({ title }) {
 
     return <>
-        <div className="titleCard">
-            {
-                title.poster_path ?
-                <img src={`https://image.tmdb.org/t/p/original${ title.poster_path }`} alt="poster" />
-                :
-                <img src={ title.poster_url } alt="poster" />
-                
-            }
-            <p>{ title.title }</p>
+        <div className="featured-titleCard">
+            <img src={ title.poster_url } alt="poster" />
         </div>
     </>
 }

@@ -4,6 +4,10 @@ nav {
     background-color: #5B4E77;
 }
 
+nav a {
+    color: #ffff;
+}
+
 nav .content {
     max-width: 850px;
     margin: 0px auto;

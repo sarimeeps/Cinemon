@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./backdrop.css";
 import { Link } from "react-router-dom";
 import TitleSlider from "../titleSlider/TitleSlider";
+import FeaturedSlider from "../featuredSlider/FeaturedSlider";
 
 
 export default function BackDrop({ selected, featured }) {
@@ -28,7 +29,7 @@ export default function BackDrop({ selected, featured }) {
                 </div>
 
                 <div className="carousel">
-                   
+                   <FeaturedSlider titles={featured} />
                 </div>
 
             </div>

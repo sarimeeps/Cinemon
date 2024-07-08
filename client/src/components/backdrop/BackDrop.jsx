@@ -1,5 +1,7 @@
+import { useState } from "react";
 import "./backdrop.css";
 import { Link } from "react-router-dom";
+import TitleSlider from "../titleSlider/TitleSlider";
 
 
 export default function BackDrop({ selected, featured }) {
@@ -26,7 +28,7 @@ export default function BackDrop({ selected, featured }) {
                 </div>
 
                 <div className="carousel">
-                    
+                   
                 </div>
 
             </div>

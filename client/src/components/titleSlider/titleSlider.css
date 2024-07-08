@@ -1,0 +1,23 @@
+
+
+/* .slick-prev:before, .slick-next:before{
+  background: red;
+} */
+
+
+.slick-prev:before, .slick-next:before {
+  background-color: black;
+}
+
+.slider {
+  margin: 20px 0px;
+}
+
+.slider .title {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.titleCard img {
+  width: 100px;
+}

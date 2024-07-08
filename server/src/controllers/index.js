@@ -70,7 +70,11 @@ export const getHomePageTitles = async (req, res) => {
                     elem.backdrop = backdrops[0];
                     elem.year = title.year;
                     elem.runtime = title.runtime_minutes;
-                    elem.genre = title.genre_names[0];
+
+                    if (title.genre_names) {
+                        elem.genre = title.genre_names[0];
+                    }
+
                     elem.runtime = title.runtime_minutes;
 
                 }
